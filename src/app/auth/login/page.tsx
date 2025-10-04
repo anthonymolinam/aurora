@@ -1,6 +1,6 @@
 "use client";
 import { useState } from "react";
-import { useRouter, Link } from "next/navigation";
+import { useRouter } from "next/navigation";
 import { signIn } from "@/lib/auth-client";
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 import { Label } from "@/components/ui/label";
