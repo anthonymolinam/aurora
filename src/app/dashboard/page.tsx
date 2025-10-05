@@ -14,6 +14,7 @@ import {
   SelectItem,
   SelectValue,
 } from "@/components/ui/select";
+import { Label } from "@/components/ui/label";
 import RequireAuth from "@/components/RequireAuth";
 import RequirePasswordChange from "@/components/RequirePasswordChange";
 
@@ -153,60 +154,97 @@ export default function DashboardPage() {
       <RequirePasswordChange>
         <main className="p-6 space-y-6">
           {/* Barra de filtros */}
-          <div className="flex flex-col gap-3 md:flex-row md:items-center md:justify-between">
+          <div className="flex flex-col gap-3 md:flex-row md:items-start md:justify-between">
             <h1 className="text-2xl font-bold">Aurora — Dashboard</h1>
-            <div className="flex gap-3 flex-wrap">
-              <Select value={materia} onValueChange={setMateria}>
-                <SelectTrigger className="w-[200px]">
-                  <SelectValue placeholder="Materia" />
-                </SelectTrigger>
-                <SelectContent>
-                  {materias.map((v) => (
-                    <SelectItem key={v} value={v}>
-                      {v}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
 
-              <Select value={componente} onValueChange={setComponente}>
-                <SelectTrigger className="w-[220px]">
-                  <SelectValue placeholder="Componente" />
-                </SelectTrigger>
-                <SelectContent>
-                  {componentes.map((v) => (
-                    <SelectItem key={v} value={v}>
-                      {v}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
+            <div className="flex flex-wrap gap-4">
+              {/* Materia */}
+              <div className="flex flex-col w-[200px]">
+                <Label
+                  htmlFor="materia"
+                  className="text-xs font-medium text-muted-foreground mb-1"
+                >
+                  Materia
+                </Label>
+                <Select value={materia} onValueChange={setMateria}>
+                  <SelectTrigger id="materia">
+                    <SelectValue placeholder="Seleccionar..." />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {materias.map((v) => (
+                      <SelectItem key={v} value={v}>
+                        {v}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              </div>
 
-              <Select value={competencia} onValueChange={setCompetencia}>
-                <SelectTrigger className="w-[260px]">
-                  <SelectValue placeholder="Competencia" />
-                </SelectTrigger>
-                <SelectContent>
-                  {competencias.map((v) => (
-                    <SelectItem key={v} value={v}>
-                      {v}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
+              {/* Componente */}
+              <div className="flex flex-col w-[220px]">
+                <Label
+                  htmlFor="componente"
+                  className="text-xs font-medium text-muted-foreground mb-1"
+                >
+                  Componente
+                </Label>
+                <Select value={componente} onValueChange={setComponente}>
+                  <SelectTrigger id="componente">
+                    <SelectValue placeholder="Seleccionar..." />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {componentes.map((v) => (
+                      <SelectItem key={v} value={v}>
+                        {v}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              </div>
 
-              <Select value={grado} onValueChange={setGrado}>
-                <SelectTrigger className="w-[140px]">
-                  <SelectValue placeholder="Grado" />
-                </SelectTrigger>
-                <SelectContent>
-                  {grados.map((v: any) => (
-                    <SelectItem key={v} value={String(v)}>
-                      {v}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
+              {/* Competencia */}
+              <div className="flex flex-col w-[260px]">
+                <Label
+                  htmlFor="competencia"
+                  className="text-xs font-medium text-muted-foreground mb-1"
+                >
+                  Competencia
+                </Label>
+                <Select value={competencia} onValueChange={setCompetencia}>
+                  <SelectTrigger id="competencia">
+                    <SelectValue placeholder="Seleccionar..." />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {competencias.map((v) => (
+                      <SelectItem key={v} value={v}>
+                        {v}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              </div>
+
+              {/* Grado */}
+              <div className="flex flex-col w-[140px]">
+                <Label
+                  htmlFor="grado"
+                  className="text-xs font-medium text-muted-foreground mb-1"
+                >
+                  Grado
+                </Label>
+                <Select value={grado} onValueChange={setGrado}>
+                  <SelectTrigger id="grado">
+                    <SelectValue placeholder="Seleccionar..." />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {grados.map((v: any) => (
+                      <SelectItem key={v} value={String(v)}>
+                        {v}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              </div>
             </div>
           </div>
 
@@ -240,7 +278,7 @@ export default function DashboardPage() {
             </Card>
             <Card>
               <CardHeader>
-                <CardTitle>Desviación Estandar </CardTitle>
+                <CardTitle>Desviación Estándar</CardTitle>
               </CardHeader>
               <CardContent className="text-2xl font-semibold">
                 {isNaN(sd) ? "—" : sd.toFixed(1)}
