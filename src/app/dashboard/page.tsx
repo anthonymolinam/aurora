@@ -1,8 +1,8 @@
 "use client";
 
 import { useEffect, useMemo, useState } from "react";
-import { collection, getDocs } from "firebase/firestore";
-import { db } from "@/lib/firebase";
+import { collection, getDocs, doc, deleteDoc } from "firebase/firestore";
+import { db, auth } from "@/lib/firebase";
 import HistChart from "@/components/HistChart";
 import BoxPlot from "@/components/BoxPlot";
 import LevelBadge from "@/components/LevelBadge";
@@ -17,6 +17,24 @@ import {
 import { Label } from "@/components/ui/label";
 import RequireAuth from "@/components/RequireAuth";
 import RequirePasswordChange from "@/components/RequirePasswordChange";
+import { Button } from "@/components/ui/button";
+import { signOut } from "firebase/auth";
+import AddResultDialog from "@/components/AddResultDialog";
+import ExportCSVButton from "@/components/ExportCSVButton";
+import EditResultDialog from "@/components/EditResultDialog";
+import ConfirmButton from "@/components/ConfirmButton";
+
+function LogoutButton() {
+  const handleLogout = async () => {
+    await signOut(auth);
+    window.location.href = "/auth/login";
+  };
+  return (
+    <Button variant="destructive" onClick={handleLogout}>
+      Cerrar sesión
+    </Button>
+  );
+}
 
 // ---------- tipos ----------
 type Resultado = {
@@ -73,17 +91,19 @@ export default function DashboardPage() {
   const [competencia, setCompetencia] = useState<string>("Todas");
   const [grado, setGrado] = useState<string>("Todos");
 
+  async function fetchData() {
+    setLoading(true);
+    const snap = await getDocs(collection(db, "resultados"));
+    const rows: Resultado[] = snap.docs.map((d) => ({
+      id: d.id,
+      ...(d.data() as any),
+    }));
+    setData(rows);
+    setLoading(false);
+  }
+
   useEffect(() => {
-    (async () => {
-      setLoading(true);
-      const snap = await getDocs(collection(db, "resultados"));
-      const rows: Resultado[] = snap.docs.map((d) => ({
-        id: d.id,
-        ...(d.data() as any),
-      }));
-      setData(rows);
-      setLoading(false);
-    })();
+    fetchData();
   }, []);
 
   // opciones dinámicas (dependen de la selección anterior)
@@ -149,17 +169,49 @@ export default function DashboardPage() {
     setCompetencia("Todas");
   }, [componente]);
 
+  // eliminar
+  async function handleDelete(id?: string) {
+    if (!id) return;
+    if (!confirm("¿Eliminar este resultado?")) return;
+    await deleteDoc(doc(db, "resultados", id));
+    fetchData();
+  }
+
   return (
     <RequireAuth>
       <RequirePasswordChange>
         <main className="p-6 space-y-6">
-          {/* Barra de filtros */}
-          <div className="flex flex-col gap-3 md:flex-row md:items-start md:justify-between">
-            <h1 className="text-2xl font-bold">Aurora — Dashboard</h1>
+          {/* Encabezado + filtros (en dos filas) */}
+          <div className="space-y-4">
+            {/* fila 1: título + acciones */}
+            <div className="flex items-center justify-between">
+              <h1 className="text-2xl font-bold">Aurora — Dashboard</h1>
+              <div className="flex gap-2">
+                <ExportCSVButton
+                  rows={filtrados.map((r) => ({
+                    estudiante: r.estudiante,
+                    grado: r.grado,
+                    seccion: r.seccion,
+                    materia: r.materia,
+                    componente: r.componente,
+                    competencia: r.competencia,
+                    nivel: r.nivel,
+                    score: r.score,
+                  }))}
+                  filename={`aurora_resultados_${new Date()
+                    .toISOString()
+                    .slice(0, 10)}.csv`}
+                  disabled={loading}
+                />
+                <AddResultDialog onCreated={fetchData} />
+                <LogoutButton />
+              </div>
+            </div>
 
-            <div className="flex flex-wrap gap-4">
+            {/* fila 2: filtros en grid con labels */}
+            <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
               {/* Materia */}
-              <div className="flex flex-col w-[200px]">
+              <div className="flex flex-col">
                 <Label
                   htmlFor="materia"
                   className="text-xs font-medium text-muted-foreground mb-1"
@@ -181,7 +233,7 @@ export default function DashboardPage() {
               </div>
 
               {/* Componente */}
-              <div className="flex flex-col w-[220px]">
+              <div className="flex flex-col">
                 <Label
                   htmlFor="componente"
                   className="text-xs font-medium text-muted-foreground mb-1"
@@ -203,7 +255,7 @@ export default function DashboardPage() {
               </div>
 
               {/* Competencia */}
-              <div className="flex flex-col w-[260px]">
+              <div className="flex flex-col">
                 <Label
                   htmlFor="competencia"
                   className="text-xs font-medium text-muted-foreground mb-1"
@@ -225,7 +277,7 @@ export default function DashboardPage() {
               </div>
 
               {/* Grado */}
-              <div className="flex flex-col w-[140px]">
+              <div className="flex flex-col">
                 <Label
                   htmlFor="grado"
                   className="text-xs font-medium text-muted-foreground mb-1"
@@ -325,6 +377,17 @@ export default function DashboardPage() {
                     <div className="flex items-center gap-2">
                       <LevelBadge nivel={r.nivel} />
                       <b>{r.score}</b>
+                      <EditResultDialog id={r.id!} onUpdated={fetchData} />
+                      <ConfirmButton
+                        variant="destructive"
+                        onConfirm={() => handleDelete(r.id!)}
+                        title="Eliminar registro"
+                        description={`¿Deseas eliminar el resultado de ${r.estudiante}?`}
+                        confirmText="Eliminar"
+                        cancelText="Cancelar"
+                      >
+                        Borrar
+                      </ConfirmButton>
                     </div>
                   </li>
                 ))}
