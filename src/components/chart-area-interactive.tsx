@@ -243,7 +243,7 @@ export function ChartAreaInteractive({
     lastEmittedRef.current = { n, mean: mu, sd: sigma, median, hash };
 
     onFilteredChange(filtrados, { n, mean: mu, sd: sigma, median });
-  }, [filtrados, scores, mu, sigma]); // intencionalmente sin onFilteredChange
+  }, [filtrados, scores, mu, sigma, onFilteredChange]); // intencionalmente sin onFilteredChange
 
   return (
     <Card className="@container/card">
