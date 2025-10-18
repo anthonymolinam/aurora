@@ -1,42 +1,28 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
-import { collection, getDocs, doc, deleteDoc } from "firebase/firestore";
-import { db, auth } from "@/lib/firebase";
-import HistChart from "@/components/HistChart";
-import BoxPlot from "@/components/BoxPlot";
-import LevelBadge from "@/components/LevelBadge";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import * as React from "react";
+import { useRouter } from "next/navigation";
 import {
-  Select,
-  SelectTrigger,
-  SelectContent,
-  SelectItem,
-  SelectValue,
-} from "@/components/ui/select";
-import { Label } from "@/components/ui/label";
-import RequireAuth from "@/components/RequireAuth";
-import RequirePasswordChange from "@/components/RequirePasswordChange";
-import { Button } from "@/components/ui/button";
-import { signOut } from "firebase/auth";
-import AddResultDialog from "@/components/AddResultDialog";
-import ExportCSVButton from "@/components/ExportCSVButton";
-import EditResultDialog from "@/components/EditResultDialog";
-import ConfirmButton from "@/components/ConfirmButton";
+  collection,
+  getDocs,
+  query,
+  where,
+  QueryConstraint,
+} from "firebase/firestore";
+import { db, auth } from "@/lib/firebase";
+import { onAuthStateChanged } from "firebase/auth";
 
-function LogoutButton() {
-  const handleLogout = async () => {
-    await signOut(auth);
-    window.location.href = "/auth/login";
-  };
-  return (
-    <Button variant="destructive" onClick={handleLogout}>
-      Cerrar sesión
-    </Button>
-  );
-}
+import { AppSidebar } from "@/components/app-sidebar";
+import { ChartAreaInteractive } from "@/components/chart-area-interactive";
+import { DataTable } from "@/components/data-table";
+import { SectionCards } from "@/components/section-cards";
+import { SiteHeader } from "@/components/site-header";
+import { SidebarInset, SidebarProvider } from "@/components/ui/sidebar";
 
-// ---------- tipos ----------
+import localData from "./data.json";
+
+// --- tipos mínimos para la tabla ---
 type Resultado = {
   id?: string;
   estudiante: string;
@@ -45,357 +31,203 @@ type Resultado = {
   materia: string;
   componente: string;
   competencia: string;
-  afirmacion: string;
-  complejidad: "Baja" | "Media" | "Alta";
   nivel: "Insuficiente" | "Básico" | "Satisfactorio" | "Avanzado";
   score: number;
 };
 
-// ---------- helpers estadísticos ----------
-function mean(a: number[]) {
-  return a.length ? a.reduce((x, y) => x + y, 0) / a.length : NaN;
-}
-function median(a: number[]) {
-  if (!a.length) return NaN;
-  const s = [...a].sort((x, y) => x - y);
-  const m = Math.floor(s.length / 2);
-  return s.length % 2 ? s[m] : (s[m - 1] + s[m]) / 2;
-}
-function quartiles(a: number[]) {
-  if (!a.length) return { q1: NaN, q3: NaN };
-  const s = [...a].sort((x, y) => x - y);
-  const mid = Math.floor(s.length / 2);
-  const lower = s.slice(0, mid);
-  const upper = s.length % 2 ? s.slice(mid + 1) : s.slice(mid);
-  const med = (arr: number[]) => {
-    const n = arr.length,
-      m = Math.floor(n / 2);
-    return n % 2 ? arr[m] : (arr[m - 1] + arr[m]) / 2;
-  };
-  return { q1: med(lower), q3: med(upper) };
-}
-function stddev(a: number[]) {
-  if (a.length < 2) return NaN;
-  const m = mean(a);
-  const v = a.reduce((acc, x) => acc + (x - m) ** 2, 0) / (a.length - 1);
-  return Math.sqrt(v);
+// Helper: score -> nivel
+function nivelFromScore(score: number): Resultado["nivel"] {
+  if (score >= 80) return "Avanzado";
+  if (score >= 60) return "Satisfactorio";
+  if (score >= 40) return "Básico";
+  return "Insuficiente";
 }
 
-export default function DashboardPage() {
-  const [data, setData] = useState<Resultado[]>([]);
-  const [loading, setLoading] = useState(false);
+// Helper: "6°" -> 6
+function gradoToNumber(gr: unknown): number {
+  if (typeof gr !== "string") return Number.NaN;
+  const m = gr.match(/\d+/);
+  return m ? parseInt(m[0], 10) : Number.NaN;
+}
 
-  // filtros en cascada
-  const [materia, setMateria] = useState<string>("Todas");
-  const [componente, setComponente] = useState<string>("Todos");
-  const [competencia, setCompetencia] = useState<string>("Todas");
-  const [grado, setGrado] = useState<string>("Todos");
+export default function Page() {
+  const router = useRouter();
 
-  async function fetchData() {
-    setLoading(true);
-    const snap = await getDocs(collection(db, "resultados"));
-    const rows: Resultado[] = snap.docs.map((d) => ({
-      id: d.id,
-      ...(d.data() as any),
-    }));
-    setData(rows);
-    setLoading(false);
-  }
+  // auth guard / estado
+  const [checkingAuth, setCheckingAuth] = React.useState(true);
+  const [claims, setClaims] = React.useState<Record<string, any> | null>(null);
 
-  useEffect(() => {
-    fetchData();
-  }, []);
+  const [resultados, setResultados] = React.useState<Resultado[]>([]);
+  const [loading, setLoading] = React.useState(false);
+  const [error, setError] = React.useState<string | null>(null);
 
-  // opciones dinámicas (dependen de la selección anterior)
-  const materias = useMemo(
-    () => ["Todas", ...Array.from(new Set(data.map((d) => d.materia)))],
-    [data]
-  );
+  // sincronizados con los filtros del gráfico:
+  const [filteredResults, setFilteredResults] = React.useState<any[]>([]);
+  const [filteredStats, setFilteredStats] = React.useState<{
+    n: number;
+    mean: number;
+    sd: number;
+    median: number;
+  } | null>(null);
 
-  const componentes = useMemo(() => {
-    const source =
-      materia === "Todas" ? data : data.filter((d) => d.materia === materia);
-    return ["Todos", ...Array.from(new Set(source.map((d) => d.componente)))];
-  }, [data, materia]);
+  // 1) Vigila sesión, obtiene claims y redirige si no hay usuario
+  React.useEffect(() => {
+    const unsub = onAuthStateChanged(auth, async (user) => {
+      if (!user) {
+        router.replace("/login");
+        setCheckingAuth(false);
+        return;
+      }
+      try {
+        const token = await user.getIdTokenResult();
+        setClaims(token.claims as Record<string, any>);
+      } catch {
+        setClaims(null);
+      } finally {
+        setCheckingAuth(false);
+      }
+    });
+    return () => unsub();
+  }, [router]);
 
-  const competencias = useMemo(() => {
-    const mFiltered =
-      materia === "Todas" ? data : data.filter((d) => d.materia === materia);
-    const cFiltered =
-      componente === "Todos"
-        ? mFiltered
-        : mFiltered.filter((d) => d.componente === componente);
-    return [
-      "Todas",
-      ...Array.from(new Set(cFiltered.map((d) => d.competencia))),
-    ];
-  }, [data, materia, componente]);
+  // 2) Carga Firestore SOLO cuando ya se confirmó auth, con filtros por rol/colegio
+  React.useEffect(() => {
+    if (checkingAuth) return;
 
-  const grados = useMemo(
-    () => [
-      "Todos",
-      ...Array.from(new Set(data.map((d) => d.grado))).sort(
-        (a: any, b: any) => a - b
-      ),
-    ],
-    [data]
-  );
+    (async () => {
+      setLoading(true);
+      setError(null);
+      try {
+        const user = auth.currentUser;
+        if (!user) return;
 
-  // filtrado final
-  const filtrados = useMemo(() => {
-    return data.filter(
-      (r) =>
-        (materia === "Todas" || r.materia === materia) &&
-        (componente === "Todos" || r.componente === componente) &&
-        (competencia === "Todas" || r.competencia === competencia) &&
-        (grado === "Todos" || r.grado === Number(grado))
-    );
-  }, [data, materia, componente, competencia, grado]);
+        const role = claims?.role as string | undefined;
+        const isSuperAdmin = claims?.superadmin === true;
+        const schoolId: string | undefined =
+          (claims?.schoolId as string | undefined) ??
+          (Array.isArray(claims?.schoolIds)
+            ? (claims?.schoolIds as string[])[0]
+            : undefined);
 
-  const notas = filtrados.map((d) => d.score);
+        const constraints: QueryConstraint[] = [];
 
-  // stats
-  const m = mean(notas);
-  const med = median(notas);
-  const { q1, q3 } = quartiles(notas);
-  const sd = stddev(notas);
+        // Multi-tenant: restringe por colegio salvo superadmin
+        if (schoolId && !isSuperAdmin) {
+          constraints.push(where("schoolId", "==", schoolId));
+        }
+        if (!schoolId && !isSuperAdmin) {
+          setResultados([]);
+          setLoading(false);
+          return;
+        }
 
-  // cuando cambie "materia", resetea dependientes para evitar selecciones inválidas
-  useEffect(() => {
-    setComponente("Todos");
-    setCompetencia("Todas");
-  }, [materia]);
-  useEffect(() => {
-    setCompetencia("Todas");
-  }, [componente]);
+        // Por rol
+        if (role === "docente") {
+          constraints.push(where("docenteUid", "==", user.uid));
+        } else if (role === "acudiente") {
+          constraints.push(where("acudienteUid", "==", user.uid));
+        } else if (role === "admin" || isSuperAdmin) {
+          // sin extra
+        } else {
+          setResultados([]);
+          setLoading(false);
+          return;
+        }
 
-  // eliminar
-  async function handleDelete(id?: string) {
-    if (!id) return;
-    if (!confirm("¿Eliminar este resultado?")) return;
-    await deleteDoc(doc(db, "resultados", id));
-    fetchData();
-  }
+        const base = collection(db, "resultados");
+        const q = constraints.length
+          ? query(base, ...constraints)
+          : query(base);
+        const snap = await getDocs(q);
+
+        const rows: Resultado[] = snap.docs.map((d) => {
+          const v = d.data() as any;
+          const scoreNum =
+            typeof v.score === "number" ? v.score : Number(v.score ?? 0);
+
+          return {
+            id: d.id,
+            estudiante: v.studentId ?? v.estudianteUid ?? "—",
+            grado: gradoToNumber(v.grade),
+            seccion: v.grupo ?? v.seccion ?? "",
+            materia: v.subject ?? "",
+            componente: v.component ?? "",
+            competencia: v.affirmation ?? v.standard ?? "",
+            nivel: nivelFromScore(scoreNum),
+            score: scoreNum,
+          };
+        });
+
+        setResultados(rows);
+        // reset filtros derivados
+        setFilteredResults([]);
+        setFilteredStats(null);
+      } catch (e: any) {
+        console.error(e);
+        setError(
+          e?.message ??
+            "Error al cargar datos. Verifica reglas, índices y credenciales."
+        );
+      } finally {
+        setLoading(false);
+      }
+    })();
+  }, [checkingAuth, claims]);
+
+  if (checkingAuth) return null;
+
+  // Si quieres que la tabla también siga filtros (recomendado):
+  const dataForTable = (
+    filteredResults.length ? filteredResults : resultados
+  ) as any[];
 
   return (
-    <RequireAuth>
-      <RequirePasswordChange>
-        <main className="p-6 space-y-6">
-          {/* Encabezado + filtros (en dos filas) */}
-          <div className="space-y-4">
-            {/* fila 1: título + acciones */}
-            <div className="flex items-center justify-between">
-              <h1 className="text-2xl font-bold">Aurora — Dashboard</h1>
-              <div className="flex gap-2">
-                <ExportCSVButton
-                  rows={filtrados.map((r) => ({
-                    estudiante: r.estudiante,
-                    grado: r.grado,
-                    seccion: r.seccion,
-                    materia: r.materia,
-                    componente: r.componente,
-                    competencia: r.competencia,
-                    nivel: r.nivel,
-                    score: r.score,
-                  }))}
-                  filename={`aurora_resultados_${new Date()
-                    .toISOString()
-                    .slice(0, 10)}.csv`}
-                  disabled={loading}
+    <SidebarProvider
+      style={
+        {
+          "--sidebar-width": "calc(var(--spacing) * 72)",
+          "--header-height": "calc(var(--spacing) * 12)",
+        } as React.CSSProperties
+      }
+    >
+      <AppSidebar variant="inset" />
+      <SidebarInset>
+        <SiteHeader />
+        <div className="flex flex-1 flex-col">
+          <div className="@container/main flex flex-1 flex-col gap-2">
+            <div className="flex flex-col gap-4 py-4 md:gap-6 md:py-6">
+              {/* Tarjetas: usan filtrados + stats del gráfico si existen */}
+              <SectionCards
+                results={dataForTable}
+                claims={claims}
+                stats={filteredStats}
+              />
+
+              <div className="px-4 lg:px-6">
+                <ChartAreaInteractive
+                  results={resultados as any[]}
+                  claims={claims}
+                  onFilteredChange={(filtered, stats) => {
+                    setFilteredResults(filtered);
+                    setFilteredStats(stats);
+                  }}
                 />
-                <AddResultDialog onCreated={fetchData} />
-                <LogoutButton />
-              </div>
-            </div>
-
-            {/* fila 2: filtros en grid con labels */}
-            <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
-              {/* Materia */}
-              <div className="flex flex-col">
-                <Label
-                  htmlFor="materia"
-                  className="text-xs font-medium text-muted-foreground mb-1"
-                >
-                  Materia
-                </Label>
-                <Select value={materia} onValueChange={setMateria}>
-                  <SelectTrigger id="materia">
-                    <SelectValue placeholder="Seleccionar..." />
-                  </SelectTrigger>
-                  <SelectContent>
-                    {materias.map((v) => (
-                      <SelectItem key={v} value={v}>
-                        {v}
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
               </div>
 
-              {/* Componente */}
-              <div className="flex flex-col">
-                <Label
-                  htmlFor="componente"
-                  className="text-xs font-medium text-muted-foreground mb-1"
-                >
-                  Componente
-                </Label>
-                <Select value={componente} onValueChange={setComponente}>
-                  <SelectTrigger id="componente">
-                    <SelectValue placeholder="Seleccionar..." />
-                  </SelectTrigger>
-                  <SelectContent>
-                    {componentes.map((v) => (
-                      <SelectItem key={v} value={v}>
-                        {v}
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
-              </div>
+              {loading && (
+                <div className="px-4 lg:px-6 text-sm text-muted-foreground">
+                  Cargando resultados…
+                </div>
+              )}
+              {error && (
+                <div className="px-4 lg:px-6 text-sm text-red-600">{error}</div>
+              )}
 
-              {/* Competencia */}
-              <div className="flex flex-col">
-                <Label
-                  htmlFor="competencia"
-                  className="text-xs font-medium text-muted-foreground mb-1"
-                >
-                  Competencia
-                </Label>
-                <Select value={competencia} onValueChange={setCompetencia}>
-                  <SelectTrigger id="competencia">
-                    <SelectValue placeholder="Seleccionar..." />
-                  </SelectTrigger>
-                  <SelectContent>
-                    {competencias.map((v) => (
-                      <SelectItem key={v} value={v}>
-                        {v}
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
-              </div>
-
-              {/* Grado */}
-              <div className="flex flex-col">
-                <Label
-                  htmlFor="grado"
-                  className="text-xs font-medium text-muted-foreground mb-1"
-                >
-                  Grado
-                </Label>
-                <Select value={grado} onValueChange={setGrado}>
-                  <SelectTrigger id="grado">
-                    <SelectValue placeholder="Seleccionar..." />
-                  </SelectTrigger>
-                  <SelectContent>
-                    {grados.map((v: any) => (
-                      <SelectItem key={v} value={String(v)}>
-                        {v}
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
-              </div>
+              <DataTable data={dataForTable} />
             </div>
           </div>
-
-          {/* Stats */}
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-            <Card>
-              <CardHeader>
-                <CardTitle>Promedio</CardTitle>
-              </CardHeader>
-              <CardContent className="text-2xl font-semibold">
-                {isNaN(m) ? "—" : m.toFixed(1)}
-              </CardContent>
-            </Card>
-            <Card>
-              <CardHeader>
-                <CardTitle>Mediana</CardTitle>
-              </CardHeader>
-              <CardContent className="text-2xl font-semibold">
-                {isNaN(med) ? "—" : med.toFixed(1)}
-              </CardContent>
-            </Card>
-            <Card>
-              <CardHeader>
-                <CardTitle>Q1 / Q3</CardTitle>
-              </CardHeader>
-              <CardContent className="text-2xl font-semibold">
-                {isNaN(q1) || isNaN(q3)
-                  ? "—"
-                  : `${q1.toFixed(1)} / ${q3.toFixed(1)}`}
-              </CardContent>
-            </Card>
-            <Card>
-              <CardHeader>
-                <CardTitle>Desviación Estándar</CardTitle>
-              </CardHeader>
-              <CardContent className="text-2xl font-semibold">
-                {isNaN(sd) ? "—" : sd.toFixed(1)}
-              </CardContent>
-            </Card>
-          </div>
-
-          {/* Gráficas */}
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-            <Card>
-              <CardHeader>
-                <CardTitle>Histograma</CardTitle>
-              </CardHeader>
-              <CardContent>
-                {loading ? <p>Cargando…</p> : <HistChart values={notas} />}
-              </CardContent>
-            </Card>
-            <Card>
-              <CardHeader>
-                <CardTitle>Diagrama de Caja</CardTitle>
-              </CardHeader>
-              <CardContent>
-                {loading ? <p>Cargando…</p> : <BoxPlot values={notas} />}
-              </CardContent>
-            </Card>
-          </div>
-
-          {/* Vista rápida */}
-          <Card>
-            <CardHeader>
-              <CardTitle>Resultados (muestra)</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <ul className="grid md:grid-cols-2 gap-2 text-sm">
-                {filtrados.slice(0, 12).map((r) => (
-                  <li
-                    key={r.id}
-                    className="border rounded p-2 flex items-center justify-between gap-2"
-                  >
-                    <div>
-                      <b>{r.estudiante}</b> — {r.materia} (G{r.grado}
-                      {r.seccion}) · {r.competencia}
-                    </div>
-                    <div className="flex items-center gap-2">
-                      <LevelBadge nivel={r.nivel} />
-                      <b>{r.score}</b>
-                      <EditResultDialog id={r.id!} onUpdated={fetchData} />
-                      <ConfirmButton
-                        variant="destructive"
-                        onConfirm={() => handleDelete(r.id!)}
-                        title="Eliminar registro"
-                        description={`¿Deseas eliminar el resultado de ${r.estudiante}?`}
-                        confirmText="Eliminar"
-                        cancelText="Cancelar"
-                      >
-                        Borrar
-                      </ConfirmButton>
-                    </div>
-                  </li>
-                ))}
-              </ul>
-            </CardContent>
-          </Card>
-        </main>
-      </RequirePasswordChange>
-    </RequireAuth>
+        </div>
+      </SidebarInset>
+    </SidebarProvider>
   );
 }

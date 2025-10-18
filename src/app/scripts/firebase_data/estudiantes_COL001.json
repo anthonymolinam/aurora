@@ -1,0 +1,522 @@
+[
+  {
+    "id": "COL001_3°_001",
+    "schoolId": "COL001",
+    "estudianteUid": "uid_COL001_est_3_a9bcc146",
+    "acudienteUid": "uid_COL001_acu_3_12aebe48",
+    "grade": "3°",
+    "grupo": "3°A",
+    "docenteUid": null,
+    "docenteUids": [
+      "uid_COL001_doc_mate_2f36ef1b",
+      "uid_COL001_doc_cien_2f981f9d"
+    ]
+  },
+  {
+    "id": "COL001_3°_002",
+    "schoolId": "COL001",
+    "estudianteUid": "uid_COL001_est_3_f7a13b11",
+    "acudienteUid": "uid_COL001_acu_3_023e9274",
+    "grade": "3°",
+    "grupo": "3°A",
+    "docenteUid": null,
+    "docenteUids": [
+      "uid_COL001_doc_mate_2f36ef1b",
+      "uid_COL001_doc_cien_2f981f9d"
+    ]
+  },
+  {
+    "id": "COL001_3°_003",
+    "schoolId": "COL001",
+    "estudianteUid": "uid_COL001_est_3_4fe971d0",
+    "acudienteUid": "uid_COL001_acu_3_7db40f09",
+    "grade": "3°",
+    "grupo": "3°A",
+    "docenteUid": null,
+    "docenteUids": [
+      "uid_COL001_doc_mate_2f36ef1b",
+      "uid_COL001_doc_cien_2f981f9d"
+    ]
+  },
+  {
+    "id": "COL001_3°_004",
+    "schoolId": "COL001",
+    "estudianteUid": "uid_COL001_est_3_895a6653",
+    "acudienteUid": "uid_COL001_acu_3_d366aa35",
+    "grade": "3°",
+    "grupo": "3°A",
+    "docenteUid": null,
+    "docenteUids": [
+      "uid_COL001_doc_mate_2f36ef1b",
+      "uid_COL001_doc_cien_2f981f9d"
+    ]
+  },
+  {
+    "id": "COL001_3°_005",
+    "schoolId": "COL001",
+    "estudianteUid": "uid_COL001_est_3_f02b799f",
+    "acudienteUid": "uid_COL001_acu_3_e3e54fd0",
+    "grade": "3°",
+    "grupo": "3°A",
+    "docenteUid": null,
+    "docenteUids": [
+      "uid_COL001_doc_mate_2f36ef1b",
+      "uid_COL001_doc_cien_2f981f9d"
+    ]
+  },
+  {
+    "id": "COL001_3°_006",
+    "schoolId": "COL001",
+    "estudianteUid": "uid_COL001_est_3_8f768023",
+    "acudienteUid": "uid_COL001_acu_3_767f1bbf",
+    "grade": "3°",
+    "grupo": "3°A",
+    "docenteUid": null,
+    "docenteUids": [
+      "uid_COL001_doc_mate_2f36ef1b",
+      "uid_COL001_doc_cien_2f981f9d"
+    ]
+  },
+  {
+    "id": "COL001_3°_007",
+    "schoolId": "COL001",
+    "estudianteUid": "uid_COL001_est_3_36728747",
+    "acudienteUid": "uid_COL001_acu_3_523e6181",
+    "grade": "3°",
+    "grupo": "3°A",
+    "docenteUid": null,
+    "docenteUids": [
+      "uid_COL001_doc_mate_2f36ef1b",
+      "uid_COL001_doc_cien_2f981f9d"
+    ]
+  },
+  {
+    "id": "COL001_3°_008",
+    "schoolId": "COL001",
+    "estudianteUid": "uid_COL001_est_3_4d91276e",
+    "acudienteUid": "uid_COL001_acu_3_f4d8a6cd",
+    "grade": "3°",
+    "grupo": "3°A",
+    "docenteUid": null,
+    "docenteUids": [
+      "uid_COL001_doc_mate_2f36ef1b",
+      "uid_COL001_doc_cien_2f981f9d"
+    ]
+  },
+  {
+    "id": "COL001_3°_009",
+    "schoolId": "COL001",
+    "estudianteUid": "uid_COL001_est_3_b3e7dee3",
+    "acudienteUid": "uid_COL001_acu_3_7b4cf639",
+    "grade": "3°",
+    "grupo": "3°A",
+    "docenteUid": null,
+    "docenteUids": [
+      "uid_COL001_doc_mate_2f36ef1b",
+      "uid_COL001_doc_cien_2f981f9d"
+    ]
+  },
+  {
+    "id": "COL001_3°_010",
+    "schoolId": "COL001",
+    "estudianteUid": "uid_COL001_est_3_db075082",
+    "acudienteUid": "uid_COL001_acu_3_503fb95e",
+    "grade": "3°",
+    "grupo": "3°A",
+    "docenteUid": null,
+    "docenteUids": [
+      "uid_COL001_doc_mate_2f36ef1b",
+      "uid_COL001_doc_cien_2f981f9d"
+    ]
+  },
+  {
+    "id": "COL001_3°_011",
+    "schoolId": "COL001",
+    "estudianteUid": "uid_COL001_est_3_44414b61",
+    "acudienteUid": "uid_COL001_acu_3_1ce455bf",
+    "grade": "3°",
+    "grupo": "3°A",
+    "docenteUid": null,
+    "docenteUids": [
+      "uid_COL001_doc_mate_2f36ef1b",
+      "uid_COL001_doc_cien_2f981f9d"
+    ]
+  },
+  {
+    "id": "COL001_3°_012",
+    "schoolId": "COL001",
+    "estudianteUid": "uid_COL001_est_3_57bcee2f",
+    "acudienteUid": "uid_COL001_acu_3_e5d061f3",
+    "grade": "3°",
+    "grupo": "3°A",
+    "docenteUid": null,
+    "docenteUids": [
+      "uid_COL001_doc_mate_2f36ef1b",
+      "uid_COL001_doc_cien_2f981f9d"
+    ]
+  },
+  {
+    "id": "COL001_3°_013",
+    "schoolId": "COL001",
+    "estudianteUid": "uid_COL001_est_3_bbe06b21",
+    "acudienteUid": "uid_COL001_acu_3_bc78bfc8",
+    "grade": "3°",
+    "grupo": "3°A",
+    "docenteUid": null,
+    "docenteUids": [
+      "uid_COL001_doc_mate_2f36ef1b",
+      "uid_COL001_doc_cien_2f981f9d"
+    ]
+  },
+  {
+    "id": "COL001_3°_014",
+    "schoolId": "COL001",
+    "estudianteUid": "uid_COL001_est_3_2d5e3b56",
+    "acudienteUid": "uid_COL001_acu_3_312bf13c",
+    "grade": "3°",
+    "grupo": "3°A",
+    "docenteUid": null,
+    "docenteUids": [
+      "uid_COL001_doc_mate_2f36ef1b",
+      "uid_COL001_doc_cien_2f981f9d"
+    ]
+  },
+  {
+    "id": "COL001_3°_015",
+    "schoolId": "COL001",
+    "estudianteUid": "uid_COL001_est_3_87bcad21",
+    "acudienteUid": "uid_COL001_acu_3_bda68518",
+    "grade": "3°",
+    "grupo": "3°A",
+    "docenteUid": null,
+    "docenteUids": [
+      "uid_COL001_doc_mate_2f36ef1b",
+      "uid_COL001_doc_cien_2f981f9d"
+    ]
+  },
+  {
+    "id": "COL001_3°_016",
+    "schoolId": "COL001",
+    "estudianteUid": "uid_COL001_est_3_cd39cb2e",
+    "acudienteUid": "uid_COL001_acu_3_e041c290",
+    "grade": "3°",
+    "grupo": "3°A",
+    "docenteUid": null,
+    "docenteUids": [
+      "uid_COL001_doc_mate_2f36ef1b",
+      "uid_COL001_doc_cien_2f981f9d"
+    ]
+  },
+  {
+    "id": "COL001_3°_017",
+    "schoolId": "COL001",
+    "estudianteUid": "uid_COL001_est_3_209dece7",
+    "acudienteUid": "uid_COL001_acu_3_7e06f34e",
+    "grade": "3°",
+    "grupo": "3°A",
+    "docenteUid": null,
+    "docenteUids": [
+      "uid_COL001_doc_mate_2f36ef1b",
+      "uid_COL001_doc_cien_2f981f9d"
+    ]
+  },
+  {
+    "id": "COL001_3°_018",
+    "schoolId": "COL001",
+    "estudianteUid": "uid_COL001_est_3_32a08a18",
+    "acudienteUid": "uid_COL001_acu_3_c472a412",
+    "grade": "3°",
+    "grupo": "3°A",
+    "docenteUid": null,
+    "docenteUids": [
+      "uid_COL001_doc_mate_2f36ef1b",
+      "uid_COL001_doc_cien_2f981f9d"
+    ]
+  },
+  {
+    "id": "COL001_3°_019",
+    "schoolId": "COL001",
+    "estudianteUid": "uid_COL001_est_3_f255b296",
+    "acudienteUid": "uid_COL001_acu_3_aaf6af0f",
+    "grade": "3°",
+    "grupo": "3°A",
+    "docenteUid": null,
+    "docenteUids": [
+      "uid_COL001_doc_mate_2f36ef1b",
+      "uid_COL001_doc_cien_2f981f9d"
+    ]
+  },
+  {
+    "id": "COL001_3°_020",
+    "schoolId": "COL001",
+    "estudianteUid": "uid_COL001_est_3_8e16b7d1",
+    "acudienteUid": "uid_COL001_acu_3_efa994fd",
+    "grade": "3°",
+    "grupo": "3°A",
+    "docenteUid": null,
+    "docenteUids": [
+      "uid_COL001_doc_mate_2f36ef1b",
+      "uid_COL001_doc_cien_2f981f9d"
+    ]
+  },
+  {
+    "id": "COL001_6°_001",
+    "schoolId": "COL001",
+    "estudianteUid": "uid_COL001_est_6_ab882cd5",
+    "acudienteUid": "uid_COL001_acu_6_d4a6826f",
+    "grade": "6°",
+    "grupo": "6°A",
+    "docenteUid": null,
+    "docenteUids": [
+      "uid_COL001_doc_mate_2f36ef1b",
+      "uid_COL001_doc_cien_2f981f9d"
+    ]
+  },
+  {
+    "id": "COL001_6°_002",
+    "schoolId": "COL001",
+    "estudianteUid": "uid_COL001_est_6_ad5d027c",
+    "acudienteUid": "uid_COL001_acu_6_e4a0b858",
+    "grade": "6°",
+    "grupo": "6°A",
+    "docenteUid": null,
+    "docenteUids": [
+      "uid_COL001_doc_mate_2f36ef1b",
+      "uid_COL001_doc_cien_2f981f9d"
+    ]
+  },
+  {
+    "id": "COL001_6°_003",
+    "schoolId": "COL001",
+    "estudianteUid": "uid_COL001_est_6_65388637",
+    "acudienteUid": "uid_COL001_acu_6_f21242cc",
+    "grade": "6°",
+    "grupo": "6°A",
+    "docenteUid": null,
+    "docenteUids": [
+      "uid_COL001_doc_mate_2f36ef1b",
+      "uid_COL001_doc_cien_2f981f9d"
+    ]
+  },
+  {
+    "id": "COL001_6°_004",
+    "schoolId": "COL001",
+    "estudianteUid": "uid_COL001_est_6_9fd50c78",
+    "acudienteUid": "uid_COL001_acu_6_d2c6a6af",
+    "grade": "6°",
+    "grupo": "6°A",
+    "docenteUid": null,
+    "docenteUids": [
+      "uid_COL001_doc_mate_2f36ef1b",
+      "uid_COL001_doc_cien_2f981f9d"
+    ]
+  },
+  {
+    "id": "COL001_6°_005",
+    "schoolId": "COL001",
+    "estudianteUid": "uid_COL001_est_6_7d21769b",
+    "acudienteUid": "uid_COL001_acu_6_e3f3cd2e",
+    "grade": "6°",
+    "grupo": "6°A",
+    "docenteUid": null,
+    "docenteUids": [
+      "uid_COL001_doc_mate_2f36ef1b",
+      "uid_COL001_doc_cien_2f981f9d"
+    ]
+  },
+  {
+    "id": "COL001_6°_006",
+    "schoolId": "COL001",
+    "estudianteUid": "uid_COL001_est_6_2b3ab9d6",
+    "acudienteUid": "uid_COL001_acu_6_d3f0dec0",
+    "grade": "6°",
+    "grupo": "6°A",
+    "docenteUid": null,
+    "docenteUids": [
+      "uid_COL001_doc_mate_2f36ef1b",
+      "uid_COL001_doc_cien_2f981f9d"
+    ]
+  },
+  {
+    "id": "COL001_6°_007",
+    "schoolId": "COL001",
+    "estudianteUid": "uid_COL001_est_6_f5d25101",
+    "acudienteUid": "uid_COL001_acu_6_032c5389",
+    "grade": "6°",
+    "grupo": "6°A",
+    "docenteUid": null,
+    "docenteUids": [
+      "uid_COL001_doc_mate_2f36ef1b",
+      "uid_COL001_doc_cien_2f981f9d"
+    ]
+  },
+  {
+    "id": "COL001_6°_008",
+    "schoolId": "COL001",
+    "estudianteUid": "uid_COL001_est_6_8e9372ff",
+    "acudienteUid": "uid_COL001_acu_6_70929aec",
+    "grade": "6°",
+    "grupo": "6°A",
+    "docenteUid": null,
+    "docenteUids": [
+      "uid_COL001_doc_mate_2f36ef1b",
+      "uid_COL001_doc_cien_2f981f9d"
+    ]
+  },
+  {
+    "id": "COL001_6°_009",
+    "schoolId": "COL001",
+    "estudianteUid": "uid_COL001_est_6_a54428b9",
+    "acudienteUid": "uid_COL001_acu_6_3aef57c1",
+    "grade": "6°",
+    "grupo": "6°A",
+    "docenteUid": null,
+    "docenteUids": [
+      "uid_COL001_doc_mate_2f36ef1b",
+      "uid_COL001_doc_cien_2f981f9d"
+    ]
+  },
+  {
+    "id": "COL001_6°_010",
+    "schoolId": "COL001",
+    "estudianteUid": "uid_COL001_est_6_4f76d3cc",
+    "acudienteUid": "uid_COL001_acu_6_6fa6a87a",
+    "grade": "6°",
+    "grupo": "6°A",
+    "docenteUid": null,
+    "docenteUids": [
+      "uid_COL001_doc_mate_2f36ef1b",
+      "uid_COL001_doc_cien_2f981f9d"
+    ]
+  },
+  {
+    "id": "COL001_6°_011",
+    "schoolId": "COL001",
+    "estudianteUid": "uid_COL001_est_6_6a354d75",
+    "acudienteUid": "uid_COL001_acu_6_46f7a9b4",
+    "grade": "6°",
+    "grupo": "6°A",
+    "docenteUid": null,
+    "docenteUids": [
+      "uid_COL001_doc_mate_2f36ef1b",
+      "uid_COL001_doc_cien_2f981f9d"
+    ]
+  },
+  {
+    "id": "COL001_6°_012",
+    "schoolId": "COL001",
+    "estudianteUid": "uid_COL001_est_6_5be674e1",
+    "acudienteUid": "uid_COL001_acu_6_9e26721e",
+    "grade": "6°",
+    "grupo": "6°A",
+    "docenteUid": null,
+    "docenteUids": [
+      "uid_COL001_doc_mate_2f36ef1b",
+      "uid_COL001_doc_cien_2f981f9d"
+    ]
+  },
+  {
+    "id": "COL001_6°_013",
+    "schoolId": "COL001",
+    "estudianteUid": "uid_COL001_est_6_94274214",
+    "acudienteUid": "uid_COL001_acu_6_1a452be2",
+    "grade": "6°",
+    "grupo": "6°A",
+    "docenteUid": null,
+    "docenteUids": [
+      "uid_COL001_doc_mate_2f36ef1b",
+      "uid_COL001_doc_cien_2f981f9d"
+    ]
+  },
+  {
+    "id": "COL001_6°_014",
+    "schoolId": "COL001",
+    "estudianteUid": "uid_COL001_est_6_996c3a23",
+    "acudienteUid": "uid_COL001_acu_6_dec93a27",
+    "grade": "6°",
+    "grupo": "6°A",
+    "docenteUid": null,
+    "docenteUids": [
+      "uid_COL001_doc_mate_2f36ef1b",
+      "uid_COL001_doc_cien_2f981f9d"
+    ]
+  },
+  {
+    "id": "COL001_6°_015",
+    "schoolId": "COL001",
+    "estudianteUid": "uid_COL001_est_6_036a9b5d",
+    "acudienteUid": "uid_COL001_acu_6_31ac8201",
+    "grade": "6°",
+    "grupo": "6°A",
+    "docenteUid": null,
+    "docenteUids": [
+      "uid_COL001_doc_mate_2f36ef1b",
+      "uid_COL001_doc_cien_2f981f9d"
+    ]
+  },
+  {
+    "id": "COL001_6°_016",
+    "schoolId": "COL001",
+    "estudianteUid": "uid_COL001_est_6_8fbbe56e",
+    "acudienteUid": "uid_COL001_acu_6_07cce5ab",
+    "grade": "6°",
+    "grupo": "6°A",
+    "docenteUid": null,
+    "docenteUids": [
+      "uid_COL001_doc_mate_2f36ef1b",
+      "uid_COL001_doc_cien_2f981f9d"
+    ]
+  },
+  {
+    "id": "COL001_6°_017",
+    "schoolId": "COL001",
+    "estudianteUid": "uid_COL001_est_6_49b46217",
+    "acudienteUid": "uid_COL001_acu_6_fe2a08b0",
+    "grade": "6°",
+    "grupo": "6°A",
+    "docenteUid": null,
+    "docenteUids": [
+      "uid_COL001_doc_mate_2f36ef1b",
+      "uid_COL001_doc_cien_2f981f9d"
+    ]
+  },
+  {
+    "id": "COL001_6°_018",
+    "schoolId": "COL001",
+    "estudianteUid": "uid_COL001_est_6_5529e70d",
+    "acudienteUid": "uid_COL001_acu_6_c2326dcf",
+    "grade": "6°",
+    "grupo": "6°A",
+    "docenteUid": null,
+    "docenteUids": [
+      "uid_COL001_doc_mate_2f36ef1b",
+      "uid_COL001_doc_cien_2f981f9d"
+    ]
+  },
+  {
+    "id": "COL001_6°_019",
+    "schoolId": "COL001",
+    "estudianteUid": "uid_COL001_est_6_e35d70b9",
+    "acudienteUid": "uid_COL001_acu_6_cb3c84e8",
+    "grade": "6°",
+    "grupo": "6°A",
+    "docenteUid": null,
+    "docenteUids": [
+      "uid_COL001_doc_mate_2f36ef1b",
+      "uid_COL001_doc_cien_2f981f9d"
+    ]
+  },
+  {
+    "id": "COL001_6°_020",
+    "schoolId": "COL001",
+    "estudianteUid": "uid_COL001_est_6_68ccb4e9",
+    "acudienteUid": "uid_COL001_acu_6_d20222ae",
+    "grade": "6°",
+    "grupo": "6°A",
+    "docenteUid": null,
+    "docenteUids": [
+      "uid_COL001_doc_mate_2f36ef1b",
+      "uid_COL001_doc_cien_2f981f9d"
+    ]
+  }
+]
